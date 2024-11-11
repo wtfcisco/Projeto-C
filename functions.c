@@ -101,9 +101,9 @@ void cadastrar_usuario () {
 }
 
 // Função para realizar login do usuário. A função está como DadosLogin realiza_login porquê ela retorna um dado do tipo DadosLogin que contém um dado char e um float e foi definido no arquivo globals.c || Dessa forma conseguimos retornar dois valores pelo return invés de só um.
-DadosLogin realizar_login() {
+int realizar_login() {
     char confirmarCPF[12], confirmarSenha[50];
-
+    
     // Solicita e armazena o CPF do usuário
     printf("Digite o CPF: ");
     scanf("%s", confirmarCPF);
@@ -112,20 +112,99 @@ DadosLogin realizar_login() {
     printf("Digite a senha: ");
     scanf("%s", confirmarSenha);
 
-    DadosLogin nomeSaldo; // Declaração de uma variável do tipo DadosLogin. Essa variável irá armazenar nome e saldo
 
-    // A função strcmp compara o cpf e senha armazenados no vetor com o cpf e senha armazenados nas variáveis confirmarCPF e confirmarSenha e retorna o valor 0 caso ambos sejam iguais. Se os dados digitados pelo usuário estiverem corretos a variável nomeSaldo recebe o nome e o saldo do usuário logado e a função retorna a variável nomeSaldo que vamos usar para fazer as operações bancárias. Lembrando que o nome é do tipo string então usamos a função strcpy para copiar o NOME do usuário cadastrado para a variável nomeSaldo pois em C o operador de atribuição = não funciona em string. Já o saldo é do tipo float então não precisamos usar strcpy.
     for (int i = 0; i < MAX_USUARIOS; i++) {
         if (strcmp(usuarios[i].cpf, confirmarCPF) == 0 && strcmp(usuarios[i].senha, confirmarSenha) == 0) {
-            strcpy(nomeSaldo.nome, usuarios[i].nome);
-            nomeSaldo.saldo = usuarios[i].saldo;
-            printf("Login Efetuado Com Sucesso\nBem Vindo %s.", nomeSaldo.nome);
-            return nomeSaldo;  // Retorna os dados do usuário logado. O return interrompe o código então o bloco abaixo só será executado caso o usuário digite cpf ou senha incorretos
+            printf("Login efetuado com sucesso\n");
+            printf("Bem-vindo %s\n", usuarios[i].nome);
+            printf("Saldo: %.2f\n", usuarios[i].saldo);
+            return i;  // Retorna o índice do usuário logado para que os dados desse usuários possam ser acessados pela função exibir_dados
         }
     }
+    printf("CPF ou senha incorretos\n");
+    return -1;
+}
 
-    // Caso o login falhe
-    printf("CPF ou Senha Incorretos.");
-    DadosLogin erro = {"", 0.0};  // Retorna dados vazios em caso de erro
-    return erro;
+
+void resetar_senha() {
+
+    char nome[100], cpf[15], dataNascimento[11], email[100], telefone[15], senha[20];
+    int conta_bancaria, index = -1;
+
+    printf("Confirme seus dados cadastrados para redefinir a senha\n");
+
+    printf("Número da conta: ");
+    scanf("%d", &conta_bancaria);
+    getchar();
+    for (int i = 0; i < MAX_USUARIOS; i++) {
+        if (usuarios[i].conta_bancaria == conta_bancaria) {
+            index = i;
+            break;
+        }
+    }
+    if (index == -1) {
+        printf("Conta não encontrada\n");
+        return;
+    }
+    
+    printf("Nome Completo: ");
+    fgets(nome, sizeof(nome), stdin);
+    remover_quebra_linha(nome);
+    if (strcmp(usuarios[index].nome, nome) != 0) {
+        printf("Nome incorreto\n");
+        return;
+    }
+
+    printf("CPF: ");
+    fgets(cpf, sizeof(cpf), stdin);
+    remover_quebra_linha(cpf);
+    if (strcmp(usuarios[index].cpf, cpf) != 0) {
+        printf("CPF incorreto\n");
+        return;
+    }
+
+    printf("Data de Nascimento: ");
+    fgets(dataNascimento, sizeof(dataNascimento), stdin);
+    remover_quebra_linha(dataNascimento);
+    if (strcmp(usuarios[index].dataNascimento, dataNascimento) != 0) {
+        printf("Data de Nascimento incorreta\n");
+        return;
+    }
+    getchar(); // Sem o getchar aqui o programa buga e atribui o valor \n ao e-mail e dá e-mail incorreto
+
+    printf("E-mail: ");
+    fgets(email, sizeof(email), stdin);
+    remover_quebra_linha(email);
+    if (strcmp(usuarios[index].email, email) != 0) {
+        printf("E-mail incorreto\n");
+        return;
+    }
+
+    printf("Telefone: ");
+    fgets(telefone, sizeof(telefone), stdin);
+    remover_quebra_linha(telefone);
+    if (strcmp(usuarios[index].telefone, telefone) != 0) {
+        printf("Telefone incorreto\n");
+        return;
+    }
+
+    printf("Digite sua nova senha: ");
+    fgets(senha, sizeof(senha), stdin);
+    remover_quebra_linha(senha);
+    strcpy(usuarios[index].senha, senha);
+    printf("Senha alterada com sucesso\n");
+}
+
+
+void exibir_dados(int index) {
+
+    printf("\n=====Dados do Usuário=====\n");
+    printf("Nome Completo: %s\n", usuarios[index].nome);
+    printf("CPF: %s\n", usuarios[index].cpf);
+    printf("Data de Nascimento: %s\n", usuarios[index].dataNascimento);
+    printf("E-mail: %s\n", usuarios[index].email);
+    printf("Telefone: %s\n", usuarios[index].telefone);
+    printf("Conta Bancária: %d\n", usuarios[index].conta_bancaria);
+    printf("Saldo: %2.f\n", usuarios[index].saldo);
+
 }
