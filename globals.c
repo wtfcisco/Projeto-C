@@ -16,11 +16,11 @@ typedef struct {
 Dados usuarios[MAX_USUARIOS] = {
     {//indice 0
         "Francisco Paulino",
-        "00000000000",
+        "11038061490",
         "05/08/2001",
-        "francisco@paulino.com",
-        "00000000000",
-        "000000",
+        "franciscopaulino100@outlook.com",
+        "83981103183",
+        "050801",
         12345678,
         10000
     },
@@ -46,10 +46,5 @@ Dados usuarios[MAX_USUARIOS] = {
     }
 };
 
-//Estrutura de dados que está sendo usada na função realizar_login no arquivo functions.c
-typedef struct {
-    char nome[100];
-    float saldo;
-} DadosLogin;
 
 int contador_usuarios = 3; //Contador para garantir que novos usuários sejam cadastrados sempre no próximo indice do vetor. O valor é incrementado a cada cadastro de usuário
