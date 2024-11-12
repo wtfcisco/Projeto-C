@@ -28,15 +28,22 @@ void cadastrar_usuario () {
     int index = contador_usuarios; // contador_usuarios é incrementada no fim do cadastro fazendo com que index seja atualizada. Dessa forma garantimos que o novo usuário sempre será cadastrado no próximo indice do vetor, tendo em vista que quando o ultimo usuário se cadastrou ele atualizou contador_usuarios.
     char nome[100], cpf[15], dataNascimento[11], email[100], telefone[15], senha[20];
 
+    
+    getchar(); //Por algum motivo, sem o getchar aqui a porra inteira da função buga
+
     // Solicita e armazena o nome do usuário. A função remover_quebra_linha remove o caractere \n que é armazenado pelo fgets no final de toda string. Sem essa função a verificação de usuário já cadastrado não funciona.
     printf("Digite seu nome completo: ");
     fgets(nome, sizeof(nome), stdin);
     remover_quebra_linha(nome);
 
+    
+
     // Solicita e armazena o CPF do usuário
     printf("Digite seu CPF sem pontos ou hífen: ");
     fgets(cpf, sizeof(cpf), stdin);
     remover_quebra_linha(cpf);
+
+    
 
     // Verifica se o CPF já está cadastrado. A função strcmp compara o cpf digitado pelo usuário com todos os cpfs armazenados no vetor para verificar se esse cpf já está cadastrado. O mesmo vale para e-mail e telefone.
     for (int i = 0; i < MAX_USUARIOS; i++) {
@@ -51,7 +58,7 @@ void cadastrar_usuario () {
     fgets(dataNascimento, sizeof(dataNascimento), stdin);
     remover_quebra_linha(dataNascimento);
 
-    getchar();  // Corrige problemas com o buffer do teclado após o uso de fgets
+    getchar();  // Aqui também mesma coisa do anterior
 
     // Solicita e armazena o e-mail do usuário
     printf("E-mail: ");
@@ -98,6 +105,7 @@ void cadastrar_usuario () {
 
     contador_usuarios++;  // Incrementa o contador de usuários
     printf("Usuário Cadastrado com sucesso!\n");
+    printf("O número de sua nova conta bancária é %d", numero_da_conta);
 }
 
 // Função para realizar login do usuário. A função está como DadosLogin realiza_login porquê ela retorna um dado do tipo DadosLogin que contém um dado char e um float e foi definido no arquivo globals.c || Dessa forma conseguimos retornar dois valores pelo return invés de só um.
@@ -198,7 +206,7 @@ void resetar_senha() {
 
 void exibir_dados(int index) {
 
-    printf("\n=====Dados do Usuário=====\n");
+    printf("\n========Dados do Usuário========\n");
     printf("Nome Completo: %s\n", usuarios[index].nome);
     printf("CPF: %s\n", usuarios[index].cpf);
     printf("Data de Nascimento: %s\n", usuarios[index].dataNascimento);
