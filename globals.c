@@ -16,11 +16,11 @@ typedef struct {
 Dados usuarios[MAX_USUARIOS] = {
     {//indice 0
         "Francisco Paulino",
-        "11038061490",
-        "05/08/2001",
-        "franciscopaulino100@outlook.com",
-        "83981103183",
-        "050801",
+        "00000000000",
+        "00/00/0000",
+        "francisco@paulino.com",
+        "00000000000",
+        "000000",
         12345678,
         10000
     },
