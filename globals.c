@@ -1,4 +1,6 @@
-#define MAX_USUARIOS 5 //Define uma constante limitando o número de usuários cadastrados. Usamos bastante no código para poder iterar todos os usuários cadastrados no vetor com loop for
+#define MAX_USUARIOS 5
+
+ //Define uma constante limitando o número de usuários cadastrados. Usamos bastante no código para poder iterar todos os usuários cadastrados no vetor com loop for
 
 //Define uma typedef struct. Uma estrutura de dados que pode conter mais de um tipo de dados, e podemos nomear essa estrutura como quisermos, chamei-a de Dados.
 typedef struct {
@@ -45,6 +47,5 @@ Dados usuarios[MAX_USUARIOS] = {
         10000
     }
 };
-
 
 int contador_usuarios = 3; //Contador para garantir que novos usuários sejam cadastrados sempre no próximo indice do vetor. O valor é incrementado a cada cadastro de usuário
