@@ -19,7 +19,7 @@ void remover_quebra_linha(char *str) {
 }
 
 // Função para cadastrar um novo usuário
-void cadastrar_usuario () {
+void cadastrar_usuario() {
     if (contador_usuarios >= MAX_USUARIOS) {  // Verifica se o número máximo de usuários foi atingido
         printf("Não há mais espaço para cadastrar novos usuários\n");
         return;
@@ -33,7 +33,7 @@ void cadastrar_usuario () {
 
     // Solicita e armazena o nome do usuário. A função remover_quebra_linha remove o caractere \n que é armazenado pelo fgets no final de toda string. Sem essa função a verificação de usuário já cadastrado não funciona.
     printf("Digite seu nome completo: ");
-    fgets(nome, sizeof(nome), stdin);
+    fgets(nome, sizeof(nome), stdin); 
     remover_quebra_linha(nome);
 
     
@@ -108,7 +108,7 @@ void cadastrar_usuario () {
     printf("O número de sua nova conta bancária é %d", numero_da_conta);
 }
 
-// Função para realizar login do usuário. A função está como DadosLogin realiza_login porquê ela retorna um dado do tipo DadosLogin que contém um dado char e um float e foi definido no arquivo globals.c || Dessa forma conseguimos retornar dois valores pelo return invés de só um.
+// Função para realizar login
 int realizar_login() {
     char confirmarCPF[12], confirmarSenha[50];
     
@@ -126,24 +126,26 @@ int realizar_login() {
             printf("Login efetuado com sucesso\n");
             printf("Bem-vindo %s\n", usuarios[i].nome);
             printf("Saldo: %.2f\n", usuarios[i].saldo);
-            return i;  // Retorna o índice do usuário logado para que os dados desse usuários possam ser acessados pela função exibir_dados
+            return i;  // Retorna o índice do usuário logado para que os dados desse usuários possam ser acessados pelas demais funções e pelo main.c
         }
     }
     printf("CPF ou senha incorretos\n");
-    return -1;
+    return -1; //retorne -1 caso algum dado esteja incorreto.
 }
 
-
+// Função para resetar senha
 void resetar_senha() {
 
     char nome[100], cpf[15], dataNascimento[11], email[100], telefone[15], senha[20];
-    int conta_bancaria, index = -1;
+    int conta_bancaria, index = -1; //Atribuo o valor -1 para a variável index para tratamento de erros
 
     printf("Confirme seus dados cadastrados para redefinir a senha\n");
 
     printf("Número da conta: ");
     scanf("%d", &conta_bancaria);
     getchar();
+
+    //Esse loop itera por todas as contas do vetor e caso localize a conta digitada index recebe o indice i
     for (int i = 0; i < MAX_USUARIOS; i++) {
         if (usuarios[i].conta_bancaria == conta_bancaria) {
             index = i;
@@ -151,14 +153,14 @@ void resetar_senha() {
         }
     }
     if (index == -1) {
-        printf("Conta não encontrada\n");
+        printf("Conta não encontrada\n"); //Se a primeira condição for falsa index vai continuar sendo -1 e aqui retornamos ao primeiro menu do main.c
         return;
     }
     
     printf("Nome Completo: ");
     fgets(nome, sizeof(nome), stdin);
     remover_quebra_linha(nome);
-    if (strcmp(usuarios[index].nome, nome) != 0) {
+    if (strcmp(usuarios[index].nome, nome) != 0) { //Itera por todos os nomes do vetor e compara com o nome digitado para verificar se a string é igual
         printf("Nome incorreto\n");
         return;
     }
@@ -166,7 +168,7 @@ void resetar_senha() {
     printf("CPF: ");
     fgets(cpf, sizeof(cpf), stdin);
     remover_quebra_linha(cpf);
-    if (strcmp(usuarios[index].cpf, cpf) != 0) {
+    if (strcmp(usuarios[index].cpf, cpf) != 0) { //Itera por todos os cpf  do vetor e compara com o nome digitado para verificar se a string é igual
         printf("CPF incorreto\n");
         return;
     }
@@ -174,7 +176,7 @@ void resetar_senha() {
     printf("Data de Nascimento: ");
     fgets(dataNascimento, sizeof(dataNascimento), stdin);
     remover_quebra_linha(dataNascimento);
-    if (strcmp(usuarios[index].dataNascimento, dataNascimento) != 0) {
+    if (strcmp(usuarios[index].dataNascimento, dataNascimento) != 0) { //Itera por todas as datas do vetor e compara com o nome digitado para verificar se a string é igual
         printf("Data de Nascimento incorreta\n");
         return;
     }
@@ -183,7 +185,7 @@ void resetar_senha() {
     printf("E-mail: ");
     fgets(email, sizeof(email), stdin);
     remover_quebra_linha(email);
-    if (strcmp(usuarios[index].email, email) != 0) {
+    if (strcmp(usuarios[index].email, email) != 0) { //Itera por todos os emails do vetor e compara com o nome digitado para verificar se a string é igual
         printf("E-mail incorreto\n");
         return;
     }
@@ -191,15 +193,15 @@ void resetar_senha() {
     printf("Telefone: ");
     fgets(telefone, sizeof(telefone), stdin);
     remover_quebra_linha(telefone);
-    if (strcmp(usuarios[index].telefone, telefone) != 0) {
+    if (strcmp(usuarios[index].telefone, telefone) != 0) { //Itera por todos os telefones do vetor e compara com o nome digitado para verificar se a string é igual
         printf("Telefone incorreto\n");
         return;
     }
 
-    printf("Digite sua nova senha: ");
+    printf("Digite sua nova senha: ");    //Solicita nova asenha
     fgets(senha, sizeof(senha), stdin);
     remover_quebra_linha(senha);
-    strcpy(usuarios[index].senha, senha);
+    strcpy(usuarios[index].senha, senha); //Copia a senha da variavel senha para o vetor
     printf("Senha alterada com sucesso\n");
 }
 
@@ -215,4 +217,118 @@ void exibir_dados(int index) {
     printf("Conta Bancária: %d\n", usuarios[index].conta_bancaria);
     printf("Saldo: %2.f\n", usuarios[index].saldo);
 
+}
+
+
+void realizar_saque(int index) {
+
+    float saque;
+
+    printf("Digite o valor que deseja sacar: ");
+
+    if (scanf("%f", &saque) != 1 || saque <= 0) { //verifica se o valor é numérico e se é maior que 0
+        printf("Valor de saque inválido. Por favor, insira um valor válido.\n");
+        return;
+    }
+
+    if (saque > usuarios[index].saldo) { //verifica se o valor digitado é maior que o saldo disponivel
+        printf("Saldo insuficiente. Seu saldo atual é: R$ %.2f\n", usuarios[index].saldo);
+        return;
+    }
+
+    usuarios[index].saldo -= saque; //subtrai o valor saque do saldo
+
+    printf("Saque realizado com sucesso! Seu novo saldo é: R$ %.2f\n", usuarios[index].saldo);
+}
+
+
+void realizar_deposito(int index) {
+
+    float deposito;
+
+    printf("Digite o valor que deseja depositar: ");
+
+    if (scanf("%f", &deposito) != 1 || deposito <= 0) { //verifica se o valor é numerico e se é maior que 0
+    printf("Valor de saque inválido. Por favor, insira um valor válido.\n");
+    return;
+}
+    usuarios[index].saldo += deposito; // soma o valor de saldo com o valor de deposito
+
+    printf("Deposito realizado com sucesso! Seu novo saldo é R$ %.2f\n", usuarios[index].saldo);
+}
+
+
+void realizar_transferencia(int index, int conta_destino) {
+    float transferencia;
+    int encontrado = -1; // Variável para armazenar o índice do usuário destinatário
+
+    // Loop para encontrar a conta de destino
+    for (int i = 0; i < MAX_USUARIOS; i++) {
+        if (usuarios[i].conta_bancaria == conta_destino) { 
+            encontrado = i; // Armazena o índice do destinatário
+            break;
+        }
+    }
+    
+    if (encontrado == -1) {
+        printf("Conta de destino não encontrada.\n");
+        return;
+    }
+
+    printf("Digite o valor da transferência: ");
+    if (scanf("%f", &transferencia) != 1 || transferencia <= 0) {
+        printf("Valor de transferência inválido. Por favor, insira um valor válido.\n");
+        return;
+    }
+
+    if (usuarios[index].saldo < transferencia) {
+        printf("Saldo insuficiente para a transferência.\n");
+        return;
+    }
+
+    // Realiza a transferência
+    usuarios[index].saldo -= transferencia;
+    usuarios[encontrado].saldo += transferencia;
+
+    printf("Transferência realizada com sucesso!\n");
+    printf("Seu novo saldo é de: R$ %.2f\n", usuarios[index].saldo);
+}
+
+
+
+void menu_bancario(int usuario) {
+    int opcao = 0, conta_destino;
+    while (opcao != 5) {
+        printf("\n============================\n");
+        printf("1 - Saque\n");
+        printf("2 - Deposito\n");
+        printf("3 - Transferencia\n");
+        printf("4 - Exibir Dados\n");
+        printf("5 - Sair\n");
+        printf("============================\n");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+            case 1:
+                realizar_saque(usuario);
+                break;
+            case 2:
+                realizar_deposito(usuario);
+                break;
+            case 3:
+                printf("Digite o número da conta de quem você deseja transferir: ");
+                scanf("%d", &conta_destino);
+                realizar_transferencia(usuario, conta_destino);
+                break;
+            case 4:
+                exibir_dados(usuario);
+                break;
+            case 5:
+                printf("Saindo...\n");
+                break;
+            default:
+                printf("Digite uma opção válida\n");
+                break;
+        }
+    }
 }
