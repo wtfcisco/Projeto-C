@@ -320,10 +320,6 @@ void realizar_transferencia(int index, int conta_destino) {
     usuarios[index].saldo -= transferencia;
     usuarios[encontrado].saldo += transferencia;
 
-    strcpy(usuarios[index].transacao[usuarios[index].contador_transacoes].nome_destinatario, usuarios[encontrado].nome);
-    strcpy(usuarios[index].transacao[usuarios->contador_transacoes].descricao, "Transferencia");
-    usuarios->contador_transacoes++;
-
     printf("Transferência realizada com sucesso!\n");
     printf("Seu novo saldo é de: R$ %.2f\n", usuarios[index].saldo);
 }
@@ -337,12 +333,7 @@ void exibir_extrato(int index) {
             usuarios[index].transacao[i].valor != 0.0) {
             // Se tiver dados válidos, imprime a transação
             printf("Data: %s | ", usuarios[index].transacao[i].dataHora);
-            printf("%s | ", usuarios[index].transacao[i].descricao);
-            printf("Valor: %.2f\n", usuarios[index].transacao[i].valor);
-        }
-        if (strcmp(usuarios[index].transacao[i].descricao, "Transferencia") == 0) {
-            printf(" Para (%s)", usuarios[index].transacao[i].nome_destinatario);
-
+            printf("Valor: %.2f\n", usuarios[index].transacao[i].valor);              
         }
     }   
 }
@@ -350,7 +341,7 @@ void exibir_extrato(int index) {
 
 void menu_bancario(int usuario) {
     int opcao = 0, conta_destino;
-    while (opcao != 5) {
+    while (opcao != 6) {
         printf("\n============================\n");
         printf("1 - Saque\n");
         printf("2 - Deposito\n");
@@ -388,5 +379,4 @@ void menu_bancario(int usuario) {
         }
     }
 }
-
 
