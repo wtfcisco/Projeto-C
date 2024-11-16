@@ -21,6 +21,7 @@ int main() {
                 } else {
                     menu_bancario(usuario);  // Exibe menu de operações bancárias
                     usuario = -1;  // Reseta o usuário após sair do menu bancário
+                    
                 }
                 break;
 
