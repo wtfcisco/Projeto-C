@@ -4,6 +4,22 @@
 #include <string.h> //Biblioteca para usarmos função de comparar ou copiar strings
 #include "globals.c" //Importa as estruturas de dados definidas em globals.c
 
+
+// Função para obter a data e hora atuais
+void obter_data_hora(char *dataHora) {
+    time_t t;
+    struct tm *tm_info;
+
+    // Obtém o tempo atual
+    time(&t);
+    
+    // Converte para a hora local
+    tm_info = localtime(&t);
+
+    // Formata a data e hora como "dd/mm/aaaa hh:mm:ss"
+    strftime(dataHora, 20, "%d/%m/%Y %H:%M:%S", tm_info);
+}
+
 // Função para gerar um número aleatório de 8 dígitos
 int gerar_numero() {
     srand(time(NULL));  // Inicializa o gerador de números aleatórios com a semente baseada no tempo atual
@@ -33,7 +49,7 @@ void cadastrar_usuario() {
 
     // Solicita e armazena o nome do usuário. A função remover_quebra_linha remove o caractere \n que é armazenado pelo fgets no final de toda string. Sem essa função a verificação de usuário já cadastrado não funciona.
     printf("Digite seu nome completo: ");
-    fgets(nome, sizeof(nome), stdin); 
+    fgets(nome, sizeof(nome), stdin);
     remover_quebra_linha(nome);
 
     
@@ -102,6 +118,7 @@ void cadastrar_usuario() {
     // Usa a função gerar número e armazena na variável numero_da_conta
     int numero_da_conta = gerar_numero();
     usuarios[index].conta_bancaria = numero_da_conta;
+    
 
     contador_usuarios++;  // Incrementa o contador de usuários
     printf("Usuário Cadastrado com sucesso!\n");
@@ -224,6 +241,7 @@ void realizar_saque(int index) {
 
     float saque;
 
+
     printf("Digite o valor que deseja sacar: ");
 
     if (scanf("%f", &saque) != 1 || saque <= 0) { //verifica se o valor é numérico e se é maior que 0
@@ -237,7 +255,13 @@ void realizar_saque(int index) {
     }
 
     usuarios[index].saldo -= saque; //subtrai o valor saque do saldo
-
+    usuarios[index].transacao[usuarios->contador_transacoes].valor = saque; 
+    strcpy(usuarios[index].transacao[usuarios->contador_transacoes].descricao, "Saque");
+    obter_data_hora(dataHora);
+    strcpy(usuarios[index].transacao[usuarios->contador_transacoes].dataHora, dataHora);
+    usuarios->contador_transacoes++;
+    
+    
     printf("Saque realizado com sucesso! Seu novo saldo é: R$ %.2f\n", usuarios[index].saldo);
 }
 
@@ -253,6 +277,12 @@ void realizar_deposito(int index) {
     return;
 }
     usuarios[index].saldo += deposito; // soma o valor de saldo com o valor de deposito
+    usuarios[index].transacao[usuarios->contador_transacoes].valor = deposito; 
+    strcpy(usuarios[index].transacao[usuarios->contador_transacoes].descricao, "Deposito");
+    obter_data_hora(dataHora);
+    strcpy(usuarios[index].transacao[usuarios->contador_transacoes].dataHora, dataHora);
+    usuarios->contador_transacoes++;
+
 
     printf("Deposito realizado com sucesso! Seu novo saldo é R$ %.2f\n", usuarios[index].saldo);
 }
@@ -290,10 +320,32 @@ void realizar_transferencia(int index, int conta_destino) {
     usuarios[index].saldo -= transferencia;
     usuarios[encontrado].saldo += transferencia;
 
+    strcpy(usuarios[index].transacao[usuarios[index].contador_transacoes].nome_destinatario, usuarios[encontrado].nome);
+    strcpy(usuarios[index].transacao[usuarios->contador_transacoes].descricao, "Transferencia");
+    usuarios->contador_transacoes++;
+
     printf("Transferência realizada com sucesso!\n");
     printf("Seu novo saldo é de: R$ %.2f\n", usuarios[index].saldo);
 }
 
+
+void exibir_extrato(int index) {
+    for (int i = 0; i < MAX_TRANSACAO; i++) {
+        // Verifica se os campos principais estão preenchidos:
+        if (usuarios[index].transacao[i].dataHora[0] != '\0' && 
+            usuarios[index].transacao[i].descricao[0] != '\0' && 
+            usuarios[index].transacao[i].valor != 0.0) {
+            // Se tiver dados válidos, imprime a transação
+            printf("Data: %s | ", usuarios[index].transacao[i].dataHora);
+            printf("%s | ", usuarios[index].transacao[i].descricao);
+            printf("Valor: %.2f\n", usuarios[index].transacao[i].valor);
+        }
+        if (strcmp(usuarios[index].transacao[i].descricao, "Transferencia") == 0) {
+            printf(" Para (%s)", usuarios[index].transacao[i].nome_destinatario);
+
+        }
+    }   
+}
 
 
 void menu_bancario(int usuario) {
@@ -304,7 +356,8 @@ void menu_bancario(int usuario) {
         printf("2 - Deposito\n");
         printf("3 - Transferencia\n");
         printf("4 - Exibir Dados\n");
-        printf("5 - Sair\n");
+        printf("5 - Exibir Extrato\n");
+        printf("6 - Sair\n");
         printf("============================\n");
         scanf("%d", &opcao);
 
@@ -324,6 +377,9 @@ void menu_bancario(int usuario) {
                 exibir_dados(usuario);
                 break;
             case 5:
+                exibir_extrato(usuario);
+                break;
+            case 6:
                 printf("Saindo...\n");
                 break;
             default:
@@ -332,3 +388,5 @@ void menu_bancario(int usuario) {
         }
     }
 }
+
+
