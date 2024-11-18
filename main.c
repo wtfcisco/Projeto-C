@@ -20,11 +20,9 @@ int main() {
                     printf("Falha no login, tente novamente.\n");
                 } else {
                     menu_bancario(usuario);  // Exibe menu de operações bancárias
-                    usuario = -1;  // Reseta o usuário após sair do menu bancário
-                    
+                    usuario = -1;  // Reseta o usuário após sair do menu bancário                    
                 }
                 break;
-
             case 2:
                 cadastrar_usuario();
                 break;
@@ -42,6 +40,5 @@ int main() {
                 break;
         }
     }
-
     return 0;
 }
