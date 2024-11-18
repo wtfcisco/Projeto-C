@@ -1,13 +1,13 @@
-//Define uma constante limitando o número de usuários cadastrados. Usamos bastante no código para poder iterar todos os usuários cadastrados no vetor com loop for
-#define MAX_USUARIOS 100
-#define MAX_TRANSACAO 100
+#define MAX_USUARIOS 99
+#define MAX_TRANSACAO 99
  
 typedef struct {
     char descricao[100]; // Ex.: "Depósito", "Saque", "Transferência"
     float valor;
     char dataHora[20];
-    char nome_destinatario[50];
-} Extrato;
+    char nome_destinatario[50]; //Quando realiza uma transferencia armazena o nome do destinatario para exibir no extrato
+    char nome_remetente[50]; //Quando realiza uma transferencia armazena o nome do destinatario para exibir no extrato
+} Extrato; //nome da estrutura
 
 
 //Define uma typedef struct. Uma estrutura de dados que pode conter mais de um tipo de dados, e podemos nomear essa estrutura como quisermos, chamei-a de Dados.
@@ -65,4 +65,4 @@ Dados usuarios[MAX_USUARIOS] = {
 };
 
 int contador_usuarios = 3; //Contador para garantir que novos usuários sejam cadastrados sempre no próximo indice do vetor. O valor é incrementado a cada cadastro de usuário
-char dataHora[20] = "";
+char dataHora[20] = ""; // Variável global que irá receber a data e hora quando o usuário efetuar ou receber uma transação.
