@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h> // Usamos a função srand para gerar número de conta
 #include <time.h> //biblioteca para poder usarmos a função de gerar_numero
 #include <string.h> //Biblioteca para usarmos função de comparar ou copiar strings
-#include "globals.c" //Importa as estruturas de dados definidas em globals.c
+#include "globals.h" //Importa as estruturas de dados definidas em globals.c
 
 
 // Função para obter a data e hora atuais
@@ -20,6 +20,7 @@ void obter_data_hora(char *dataHora) {
     strftime(dataHora, 20, "%d/%m/%Y %H:%M:%S", tm_info);
 }
 
+//Função para gerar número da conta
 int gerar_numero() {
     srand(time(NULL));  // Inicializa o gerador de números aleatórios com a semente baseada no tempo atual
     return (rand() % 9000) + 1000;  // Garante que o número gerado tenha 4 dígitos (entre 1000 e 9999)
@@ -104,8 +105,32 @@ void cadastrar_usuario() {
     strcpy(usuarios[index].telefone, telefone);
     strcpy(usuarios[index].senha, senha);
 
-    //Gera um número aleatório de 4 digitos e cadastra no vetor no indice do usuario
-    usuarios[index].conta_bancaria = gerar_numero();
+    //Gera um número aleatório de 4 digitos para a conta bancária e cadastra no vetor no indice do usuario
+    int conta_bancaria = gerar_numero();
+
+    // Esse laço verifica se o número gerado aleatoriamente já está no vetor usuários e caso já esteja, gera outro número e faz isso até que o número gerado não tenha sido cadastrado
+    while (1) { 
+        int numero_duplicado = 0; // Flag para verificar se existe duplicidade
+
+        // Laço que percorre todas as contas do vetor para verificar se o número gerado já existe
+        for (int i = 0; i < MAX_USUARIOS; i++) {
+            if (usuarios[i].conta_bancaria == conta_bancaria) {
+                numero_duplicado = 1; // Encontrou duplicado, marca a flag
+                break; // Sai do laço porque encontrou um número duplicado
+            }
+        }
+
+        // Se não encontrar duplicado, ou seja, numero_duplicado continua 0
+        if (!numero_duplicado) {
+            // Se não houver duplicidade, sai do laço while
+            break;
+        }
+
+        // Caso o número seja duplicado, gera outro número de conta
+        conta_bancaria = gerar_numero();
+    }
+    //adiciona o número no vetor
+    usuarios[index].conta_bancaria = conta_bancaria;
 
     contador_usuarios++;  // Incrementa o contador de usuários
     printf("Usuário Cadastrado com sucesso!\n");
