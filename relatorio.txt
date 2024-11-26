@@ -34,3 +34,5 @@ Função resetar_senha: Essa função localiza o índice do usuário logado por 
 Função exibir_dados: Recebe como parâmetro o índice do usuário logado e exibe os dados cadastrados em seu vetor, com exceção da senha.
 
 Testes realizados: Nos testes realizados em chamada pelo Discord corrigimos gradativamente os problemas apresentados em cada função. A ultima versão do código funciona perfeitamente em todas as funções e apresentou resultados satisfatórios cumprindo perfeitamente a proposta do projeto. Faremos demonstrações em sala de aula no dia da apresentação.
+
+Modularização: Importamos as funções por meio de arquivos de cabeçalho com extensão .h em função de mantermos as boas práticas de programação.
